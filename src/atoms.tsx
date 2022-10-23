@@ -6,6 +6,12 @@ export interface IToDo {
   category: "TO_DO" | "DOING" | "DONE";
 }
 
+// 카테고리 탭 상태
+export const categoryState = atom({
+  key: "category",
+  default: "TO_DO",
+});
+
 export const toDoState = atom<IToDo[]>({
   key: "toDo",
   default: [],
@@ -16,10 +22,7 @@ export const toDoSelector = selector({
   get: ({ get }) => {
     // selector가 atom을 참조하고 있음
     const toDos = get(toDoState);
-    return [
-      toDos.filter((toDo) => toDo.category === "TO_DO"),
-      toDos.filter((toDo) => toDo.category === "DOING"),
-      toDos.filter((toDo) => toDo.category === "DONE"),
-    ];
+    const category = get(categoryState);
+    return toDos.filter((toDo) => toDo.category === category);
   },
 });
