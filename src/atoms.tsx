@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
 export interface IToDo {
   id: number;
@@ -6,9 +6,20 @@ export interface IToDo {
   category: "TO_DO" | "DOING" | "DONE";
 }
 
-const toDoState = atom<IToDo[]>({
+export const toDoState = atom<IToDo[]>({
   key: "toDo",
   default: [],
 });
 
-export { toDoState };
+export const toDoSelector = selector({
+  key: "toDoSelector",
+  get: ({ get }) => {
+    // selector가 atom을 참조하고 있음
+    const toDos = get(toDoState);
+    return [
+      toDos.filter((toDo) => toDo.category === "TO_DO"),
+      toDos.filter((toDo) => toDo.category === "DOING"),
+      toDos.filter((toDo) => toDo.category === "DONE"),
+    ];
+  },
+});
